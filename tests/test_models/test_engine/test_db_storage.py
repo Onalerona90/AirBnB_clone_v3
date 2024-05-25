@@ -14,6 +14,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models import storage
 import json
 import os
 import pep8
@@ -67,6 +68,31 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+    def test_get_db_instance(self):
+        """Test retrieving an instance from the database storage"""
+        state_data = {"name": "Cundinamarca"}
+        state_instance = State(**state_data)
+        storage.new(state_instance)
+        storage.save()
+        
+        retrieved_instance = storage.get(State, state_instance.id)
+        self.assertEqual(retrieved_instance, state_instance)
+
+    def test_db_storage_count(self):
+        """Test the count method of database storage"""
+        state_data = {"name": "Vecindad"}
+        state_instance = State(**state_data)
+        storage.new(state_instance)
+        
+        city_data = {"name": "Mexico", "state_id": state_instance.id}
+        city_instance = City(**city_data)
+        storage.new(city_instance)
+        storage.save()
+      
+        count = storage.count()
+        self.assertEqual(len(storage.all()), count)
+
+
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -86,3 +112,11 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_db_instance(self):
+        """Test retrieving an instance from the database storage"""
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_db_storage_count(self):
+        """Test the count method of database storage"""
