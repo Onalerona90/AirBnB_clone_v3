@@ -8,12 +8,10 @@ from models.user import User
 from models import storage
 from api.v1.views import app_views
 from flask import abort, jsonify, make_response, request
-from flasgger.utils import swag_from
 
 
 @app_views.route(
         '/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/place/get_places.yml', methods=['GET'])
 def get_places(city_id):
     city = storage.get(City, city_id)
     if not city:
@@ -23,7 +21,6 @@ def get_places(city_id):
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
-@swag_from('documentation/place/get_place.yml', methods=['GET'])
 def get_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
@@ -33,7 +30,6 @@ def get_place(place_id):
 
 @app_views.route(
         '/places/<place_id>', methods=['DELETE'], strict_slashes=False)
-@swag_from('documentation/place/delete_place.yml', methods=['DELETE'])
 def delete_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
@@ -45,8 +41,6 @@ def delete_place(place_id):
 
 @app_views.route(
         '/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
-@swag_from(
-    'documentation/place/post_place.yml', methods=['POST'])
 def post_place(city_id):
     city = storage.get(City, city_id)
     if not city:
@@ -69,7 +63,6 @@ def post_place(city_id):
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
-@swag_from('documentation/place/put_place.yml', methods=['PUT'])
 def put_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
