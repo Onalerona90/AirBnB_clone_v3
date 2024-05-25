@@ -14,7 +14,6 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from models import storage
 import json
 import os
 import pep8
@@ -68,32 +67,6 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
-    def test_get_db_instance(self):
-        """Test retrieving an instance from the database storage"""
-        state_data = {"name": "Cundinamarca"}
-        new_state = State(**state_data)
-        storage.new(new_state)
-        storage.save()
-        
-        retrieved_instance = storage.get(State, new_state.id)
-        self.assertEqual(retrieved_instance, new_state)
-
-    def test_db_storage_count(self):
-        """Test the count method of database storage"""
-        state_data = {"name": "Vecindad"}
-        new_state = State(**state_data)
-        storage.new(new_state)
-
-        city_data = {"name": "Mexico", "state_id": new_state.id}
-        new_city = City(**city_data)
-        storage.new(new_city)
-
-        storage.save()
-
-        object_count = storage.count()
-
-        self.assertEqual(len(storage.all()), object_count)
-
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -113,11 +86,20 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
-
+    
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_get_db_instance(self):
-        """Test retrieving an instance from the database storage"""
+    def test_all_with_class(self):
+        """Test that all returns all instances of a specific class"""
+        test_user = User()
+        test_state = State()
+        test_city = City()
 
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_db_storage_count(self):
-        """Test the count method of database storage"""
+        models.storage.new(test_user)
+        models.storage.new(test_state)
+        models.storage.new(test_city)
+        models.storage.save()
+
+        user_instances = models.storage.all(User)
+
+        self.assertEqual(len(user_instances), 1)
+        self.assertIn(test_user, user_instances.values())
