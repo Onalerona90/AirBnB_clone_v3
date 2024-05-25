@@ -14,6 +14,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+from models import storage
 import json
 import os
 import pep8
@@ -87,18 +88,28 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
-    def test_all_with_class(self):
-        """Test that all returns all instances of a specific class"""
-        test_user = User()
-        test_state = State()
-        test_city = City()
+    def test_get_instance(self):
+        """Test retrieving an instance from the database storage."""
+        state_data = {"name": "Cundinamarca"}
+        state_instance = State(**state_data)
+        storage.new(state_instance)
+        storage.save()
 
-        models.storage.new(test_user)
-        models.storage.new(test_state)
-        models.storage.new(test_city)
-        models.storage.save()
+        retrieved_instance = storage.get(State, state_instance.id)
 
-        user_instances = models.storage.all(User)
+        self.assertEqual(retrieved_instance, state_instance)
 
-        self.assertEqual(len(user_instances), 1)
-        self.assertIn(test_user, user_instances.values())
+    def test_count_method(self):
+        """Test the count method of the database storage."""
+        state_data = {"name": "Vecindad"}
+        state_instance = State(**state_data)
+        storage.new(state_instance)
+
+        city_data = {"name": "Mexico", "state_id": state_instance.id}
+        city_instance = City(**city_data)
+        storage.new(city_instance)
+        storage.save()
+
+        count_result = storage.count()
+
+        self.assertEqual(len(storage.all()), count_result)    
