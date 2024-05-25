@@ -11,10 +11,10 @@ from flask import abort, jsonify, make_response, request
 from flasgger.utils import swag_from
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
+@app_views.route(
+        '/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/place/get_places.yml', methods=['GET'])
 def get_places(city_id):
-    """ Retrieves the list of all Place objects of a City """
     city = storage.get(City, city_id)
     if not city:
         abort(404)
@@ -25,17 +25,16 @@ def get_places(city_id):
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 @swag_from('documentation/place/get_place.yml', methods=['GET'])
 def get_place(place_id):
-    """ Retrieves a Place object """
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
     return jsonify(place.to_dict())
 
 
-@app_views.route('/places/<place_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route(
+        '/places/<place_id>', methods=['DELETE'], strict_slashes=False)
 @swag_from('documentation/place/delete_place.yml', methods=['DELETE'])
 def delete_place(place_id):
-    """ Deletes a Place Object """
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
@@ -45,9 +44,9 @@ def delete_place(place_id):
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
-@swag_from('documentation/place/post_place.yml', methods=['POST'])
+@swag_from(
+    'documentation/place/post_place.yml', methods=['POST'])
 def post_place(city_id):
-    """ Creates a Place """
     city = storage.get(City, city_id)
     if not city:
         abort(404)
@@ -71,7 +70,6 @@ def post_place(city_id):
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 @swag_from('documentation/place/put_place.yml', methods=['PUT'])
 def put_place(place_id):
-    """ Updates a Place """
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
