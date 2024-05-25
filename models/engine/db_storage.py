@@ -4,6 +4,7 @@ Contains the class DBStorage
 """
 
 import models
+import hashlib
 from models.amenity import Amenity
 from models.base_model import BaseModel, Base
 from models.city import City
@@ -55,9 +56,11 @@ class DBStorage:
         """add the object to the current database session"""
         self.__session.add(obj)
 
-    def save(self):
+    def save(self, obj):
         """commit all changes of the current database session"""
         self.__session.commit()
+        if isinstance(obj, User):
+            obj.password = hashlib.md5(obj.password.encode()).hexdigest()
 
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
