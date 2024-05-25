@@ -31,5 +31,6 @@ class User(BaseModel, Base):
 
     def __setattr__(self, name, value):
         """Update user password."""
-        value = md5(value.encode()).hexdigest() if name == "password" else value
+        value = md5(value.encode()).hexdigest()\
+            if name == "password" else value
         super().__setattr__(name, value)
