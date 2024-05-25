@@ -71,27 +71,28 @@ test_db_storage.py'])
     def test_get_db_instance(self):
         """Test retrieving an instance from the database storage"""
         state_data = {"name": "Cundinamarca"}
-        state_instance = State(**state_data)
-        storage.new(state_instance)
+        new_state = State(**state_data)
+        storage.new(new_state)
         storage.save()
         
-        retrieved_instance = storage.get(State, state_instance.id)
-        self.assertEqual(retrieved_instance, state_instance)
+        retrieved_instance = storage.get(State, new_state.id)
+        self.assertEqual(retrieved_instance, new_state)
 
     def test_db_storage_count(self):
         """Test the count method of database storage"""
         state_data = {"name": "Vecindad"}
-        state_instance = State(**state_data)
-        storage.new(state_instance)
-        
-        city_data = {"name": "Mexico", "state_id": state_instance.id}
-        city_instance = City(**city_data)
-        storage.new(city_instance)
-        storage.save()
-      
-        count = storage.count()
-        self.assertEqual(len(storage.all()), count)
+        new_state = State(**state_data)
+        storage.new(new_state)
 
+        city_data = {"name": "Mexico", "state_id": new_state.id}
+        new_city = City(**city_data)
+        storage.new(new_city)
+
+        storage.save()
+
+        object_count = storage.count()
+
+        self.assertEqual(len(storage.all()), object_count)
 
 
 class TestFileStorage(unittest.TestCase):
