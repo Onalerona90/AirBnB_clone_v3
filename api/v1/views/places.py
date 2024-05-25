@@ -43,7 +43,8 @@ def delete_place(place_id):
     return make_response(jsonify({}), 200)
 
 
-@app_views.route('/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
+@app_views.route(
+        '/cities/<city_id>/places', methods=['POST'], strict_slashes=False)
 @swag_from(
     'documentation/place/post_place.yml', methods=['POST'])
 def post_place(city_id):
