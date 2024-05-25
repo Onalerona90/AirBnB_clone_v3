@@ -88,7 +88,7 @@ class TestFileStorage(unittest.TestCase):
     def test_save(self):
         """Test that save properly saves objects to file.json"""
 
-    def test_get(self):
+    def test_get_db(self):
         """Test retrieving an instance from the database storage."""
         state_data = {"name": "Cundinamarca"}
         state_instance = State(**state_data)
